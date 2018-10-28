@@ -1,7 +1,6 @@
 version: "3"
 
 services:
-
   db:
     build: db
     read_only: true
@@ -18,6 +17,8 @@ services:
     #  - AWS_SECRET_ACCESS_KEY=XXXX
     #  - WALE_S3_PREFIX=s3://BUCKET_NAME/PATH
     #  - AWS_REGION=us-east-1
+    labels:
+      - traefik.enable=false
 
   app:
     build:
@@ -53,15 +54,12 @@ services:
       #- MM_CONFIG=/mattermost/config/config.json
 
   web:
-    build: web
+    image: traefik
+    command: --docker
     ports:
-      - "80:8080"
-      - "443:8443"
+      - "80:80"
+      - "443:443"
     read_only: true
     restart: unless-stopped
     volumes:
-      # This directory must have cert files if you want to enable SSL
-      - ./volumes/web/cert:/cert:ro
-      - /etc/localtime:/etc/localtime:ro
-    cap_drop:
-      - ALL
+      - /var/run/docker.sock:/var/run/docker.sock # So that Traefik can listen to Docker events
