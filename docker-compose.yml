@@ -17,8 +17,6 @@ services:
     #  - AWS_SECRET_ACCESS_KEY=XXXX
     #  - WALE_S3_PREFIX=s3://BUCKET_NAME/PATH
     #  - AWS_REGION=us-east-1
-    labels:
-      - traefik.enable=false
 
   app:
     build:
@@ -52,10 +50,15 @@ services:
 
       # in case your config is not in default location
       #- MM_CONFIG=/mattermost/config/config.json
+    labels:
+      - traefik.enable=true
+      - traefik.frontend.rule=Host:domain.org
+      - traefik.frontend.entryPoints=http
+      - traefik.port=8000
 
   web:
     image: traefik
-    command: --docker
+    command: --docker --docker.exposedbydefault=false --acme=true --acme.email=email@domain.org
     ports:
       - "80:80"
       - "443:443"
