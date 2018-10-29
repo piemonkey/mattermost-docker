@@ -53,12 +53,12 @@ services:
     labels:
       - traefik.enable=true
       - traefik.frontend.rule=Host:domain.org
-      - traefik.frontend.entryPoints=http
+      - traefik.frontend.entryPoints=https
       - traefik.port=8000
 
   web:
     image: traefik
-    command: --docker --docker.exposedbydefault=false --acme=true --acme.email=email@domain.org
+    command: --docker --docker.exposedbydefault=false
     ports:
       - "80:80"
       - "443:443"
@@ -66,3 +66,4 @@ services:
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock # So that Traefik can listen to Docker events
+      - ./web/traefik.toml:/traefik.toml
