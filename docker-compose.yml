@@ -67,3 +67,4 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock # So that Traefik can listen to Docker events
       - ./web/traefik.toml:/traefik.toml
+      - ./volumes/web/acme.json:/acme.json # Maintain Let's Encrypt if container destroyed
